@@ -102,14 +102,8 @@ class testbuild extends page {
 	public function get() {
 
 		$csv = '1,2,3,4,5,6\n7,8,9,10,11,12\n13,14,15,16,17,18';
-		$testarray = arrayTools::rowChunker($csv);
-		print_r($testarray, true);
-		$cells = array();
-		foreach ($testarray as $line) {
-			$cells[] = arrayTools::cellChunker($line);
-			print_r($line, true);
-		}
-		$this->html .= htmlTable::tableBuild($cells);
+		
+		$this->html .= htmlTable::tableBuild(arrayTools::csvChunker($csv));
 	}
 
 }
@@ -136,13 +130,13 @@ class uploadForm extends page {
 // class for making usable arrays from CSV input (commas-and-whitespace-only strings)
 class arrayTools extends page {
 	
-	public static function csvChunker($array) {
+	public static function csvChunker($csv) {
 		$chunked = array();
 		
-		// INPUT FILE
-		/* foreach (LINE_OF_INPUT as $line) {
-			$row = arrayTools::rowChunker($line);
-		} */
+		$rows = arrayTools::rowChunker($csv);
+		foreach ($rows as $line) {
+			$chunked[] = arrayTools::cellChunker($line);
+		}
 		
 		return $chunked;
 	}
