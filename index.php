@@ -79,28 +79,9 @@ abstract class page {
 class homepage extends page {
 
 	public function get() {
-
-		$form = '<form action="index.php" method="post">';
-		$form .= 'First name:<br>';
-		$form .= '<input type="text" name="firstname" value="Mickey">';
-		$form .= '<br>';
-		$form .= 'Last name:<br>';
-		$form .= '<input type="text" name="lastname" value="Mouse">';
-		$form .= '<input type="submit" value="Submit">';
-		$form .= '</form> ';
-		$this->html .= $form;
-	}
-
-}
-
-// index.php?page=testbuild
-class testbuild extends page {
-
-	public function get() {
 		
-		$this->html .= '<h1>Upload Form</h1>';
+		$this->html .= htmlForm::formBuild();
 		
-		$this->html .= $form;
 	}
 	
 	public function post() {
@@ -112,7 +93,6 @@ class testbuild extends page {
 		
 		$this->html .= print_r($_FILES, true);
 	}
-
 }
 
 // class for page tools
@@ -127,45 +107,19 @@ class pageBuild extends page {
 	}
 	
 	public static function makeTitle() {
-			$page = pageBuild::getName();
+		$page = pageBuild::getName();
 			
-			return '<title>' . $page . '</title>';
-		}
-	}
-
-// class for making usable arrays from CSV input (comma/whitespace-only strings)
-class arrayTools extends page {
-	
-	public static function csvChunker($csv) {
-		$chunked = array();
-		
-		$rows = arrayTools::rowChunker($csv);
-		foreach ($rows as $line) {
-			$chunked[] = arrayTools::cellChunker($line);
-		}
-		
-		return $chunked;
-	}
-	
-	// splits a CSV into an array of rows
-	public static function rowChunker($array) {
-		
-		return explode('\n', $array);
-	}
-	
-	// splits one row into an array of cells
-	public static function cellChunker($array) {
-		
-		return explode(',', $array);
+		return '<title>' . ucwords($page) . '</title>';
 	}
 }
 
 // class for building forms
 class htmlForm extends page {
 	public static function formBuild() {
-		$form = '<form action="index.php?uploadForm" method="post">';
+		$form = '<h1>Upload CSV File:</h1>';
+		$form .= '<form action="index.php?uploadForm" method="post">';
 		$form .= '<input type="file" name="fileToUpload" id="fileToUpload">';
-		$form .= '<input type="submit" value="Upload Image" name="submit">';
+		$form .= '<input type="submit" value="Upload CSV" name="submit">';
 		$form .= '</form> ';
 		
 		return $form;
