@@ -79,11 +79,37 @@ class homepage extends page {
 	}
 	
 	public function post() {
-		// post() should (validate file&) place the file in the folder
-		// call redirect from header
-		header("Location: https://web.njit.edu/~yw674/project1/index.php?page=CSVdisplay");
+		// post() should (validate file&) place the file in the folder	
+
 		
-		$this->html .= print_r($_FILES, true);
+/*
+	COMMENTED BECAUSE I'VE JUST COPIED/PASTED...
+
+		$target_dir = "uploads/";
+		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+		$uploadOk = 1;
+		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+		// Check if image file is a actual image or fake image
+		if(isset($_POST["submit"])) {
+		    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+		    if($check !== false) {
+			   echo "File is an image - " . $check["mime"] . ".";
+			   $uploadOk = 1;
+		    } else {
+			   echo "File is not an image.";
+			   $uploadOk = 0;
+		    }
+		}
+
+		
+	COMMENTED BECAUSE I'VE JUST COPIED/PASTED...
+*/
+		
+		// set redirect for header
+		header("Location: index.php?page=CSVdisplay");
+		
+		// print error message, because you should be gone by now...
+		$this->html .= pageBuild::heading('WHY ARE YOU HERE?!');
 	}
 }
 
@@ -112,7 +138,7 @@ class pageBuild extends page {
 	}
 	
 	public static function makeTitle($page) {			
-		return '<title>' . ucwords($page) . '</title>';
+		return '<title>' . $page . '</title>';
 	}
 
 	public static function getName() {
@@ -120,7 +146,7 @@ class pageBuild extends page {
 		if(isset($_REQUEST['page']))
 			$page = $_REQUEST['page'];
 		
-		return $page;
+		return ucwords($page);
 	}
 
 	public static function heading($str) {
