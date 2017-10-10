@@ -100,17 +100,18 @@ class CSVdisplay extends page {
 class pageBuild extends page {
 	
 	public static function pageHeader() {
-		$head = '<html><head>';
+		$name = pageBuild::getName();	// helpful to have this locally
+		
+		$head  = '<html><head>';
 		$head .= '<link rel ="stylesheet" href="styles.css">';
-		$head .= pageBuild::makeTitle();
+		$head .= pageBuild::makeTitle($name);
 		$head .= '</head><body>';
+		$head .= pageBuild::heading($name);
 		
 		return $head; 
 	}
 	
-	public static function makeTitle() {
-		$page = pageBuild::getName();
-			
+	public static function makeTitle($page) {			
 		return '<title>' . ucwords($page) . '</title>';
 	}
 
@@ -121,20 +122,24 @@ class pageBuild extends page {
 		
 		return $page;
 	}
+
+	public static function heading($str) {
+		return '<h1>' . $str . '</h1>';
+	}
 }
 
 // class for building forms
 class htmlForm extends page {
 	public static function formBuild() {
-		$form = '<h1>Upload CSV File:</h1>';
-		$form .= '<form action="index.php?homepage" method="post">';
+		$form = pageBuild::heading('Upload CSV File:');
+		$form .= '<form action="index.php?page=homepage" method="post">';
 		$form .= '<input type="file" name="fileToUpload" id="fileToUpload">';
 		$form .= '<input type="submit" value="Upload CSV" name="submit">';
 		$form .= '</form> ';
 		
 		return $form;
 	}
-	
+		
 }
 
 ?>
