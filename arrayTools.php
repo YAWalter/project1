@@ -1,30 +1,25 @@
 <?php
 
-// class for making usable arrays from CSV input (comma/whitespace-only strings)
+// class for making usable arrays from CSV input (comma/newline-only strings)
 class arrayTools extends page {
 	
 	public static function csvChunker($csv) {
 		$chunked = array();
 		
-		$rows = arrayTools::rowChunker($csv);
+		$rows = arrayTools::chunker($csv, '\n');
 		foreach ($rows as $line) {
-			$chunked[] = arrayTools::cellChunker($line);
+			$chunked[] = arrayTools::chunker($line, ',');
 		}
 		
 		return $chunked;
 	}
 	
-	// splits a CSV into an array of rows
-	public static function rowChunker($array) {
+	// possible combination of the two chunkers?
+	public static function chunker($array, $char) {
 		
-		return explode('\n', $array);
+		return explode($char, $array);
 	}
 	
-	// splits one row into an array of cells
-	public static function cellChunker($array) {
-		
-		return explode(',', $array);
-	}
 }
 
 ?>

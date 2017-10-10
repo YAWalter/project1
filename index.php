@@ -1,14 +1,5 @@
 <?php
 
-/*
-	Create an HTML form to upload a CSV file
-		-When the CSV file is uploaded:
-			-Save it to AFS in /upload directory within your project
-			-Forward the user to a page using the "header" function (https://www.w3schools.com/PhP/func_http_header.asp)
-		-The new page displays the contents of the CSV file in an HTML table:  
-			-use the <th> tag for the first row of the table and have the field names from the CSV file in this row.
-*/
-
 // # DEBUGGING
 echo '<h1><br> *** TURN DEBUG OFF!! *** <br></h1><br>';
 ini_set('display_errors', 'On');
@@ -59,7 +50,7 @@ abstract class page {
 	}
     
 	public function __destruct() {
-		$this->html .= '</body></html>';
+		$this->html .= pageBuild:pageEnder();
 		echo $this->html;
 	}
 
@@ -68,7 +59,7 @@ abstract class page {
 	}
 
 	public function post() {
-		print_r($_POST);
+		//print_r($_POST);
 	}
 }
 
@@ -109,55 +100,48 @@ class homepage extends page {
 		header("Location: index.php?page=CSVdisplay");
 		
 		// print error message, because you should be gone by now...
-		$this->html .= pageBuild::heading('WHY ARE YOU HERE?!');
+		$this->html .= htmlTags::heading('WHY ARE YOU HERE?!');
 	}
 }
 
-// // index.php?page=CSVdisplay
+// index.php?page=CSVdisplay
 class CSVdisplay extends page {
 	public function get() {
-		// gets filename from index.php?file=$file
-		$csv = '1,2,3,4,5,6\n7,8,9,10,11,12\n13,14,15,16,17,18';
-		$formData = arrayTools::csvChunker($csv);
-	}
-}
-
-// class for page tools
-class pageBuild extends page {
-	
-	public static function pageHeader() {
-		$name = pageBuild::getName();	// helpful to have this locally
 		
-		$head  = '<html><head>';
-		$head .= '<link rel ="stylesheet" href="styles.css">';
-		$head .= pageBuild::makeTitle($name);
-		$head .= '</head><body>';
-		$head .= pageBuild::heading($name);
-		
-		return $head; 
-	}
-	
-	public static function makeTitle($page) {			
-		return '<title>' . $page . '</title>';
-	}
+		// test data
+		$testcsv = '1,2,3,4,5,6\n7,8,9,10,11,12\n13,14,15,16,17,18';
 
-	public static function getName() {
-		$page = 'homepage';
-		if(isset($_REQUEST['page']))
-			$page = $_REQUEST['page'];
+		$upload = './uploads/';
+		$csv = array();
+/*
+refer to: https://www.w3schools.com/php/php_file_open.asp
+*/
+		// if there's a filename param, process the file
+		$file = pageBuild::getFile();
+		$filepath = $upload . $file;
+		if (!is_null($file)) {
+			$file = fopen($filepath, "r") or die("Unable to open file!");
+			$csv = fread($file, filesize("$filepath"));
 		
-		return ucwords($page);
-	}
-
-	public static function heading($str) {
-		return '<h1>' . $str . '</h1>';
+			$this->html .= '<hr><pre>' . print($csv) . '</pre>';
+		
+			fclose($file);
+		}
+		
+		// format the data output
+		$table = arrayTools::csvChunker($csv);
+		
+		// debug
+		$this->html .= '<hr><pre>' . print_r($table, true) . '</pre>';
+		
+		$this->html .= htmlTable::tableBuild($table);
 	}
 }
 
 // class for building forms
 class htmlForm extends page {
 	public static function formBuild() {
-		$form = pageBuild::heading('Upload CSV File:');
+		$form = htmlTags::heading('Upload CSV File:');
 		$form .= '<form action="index.php?page=homepage" method="post" enctype="multipart/form-data">';
 		$form .= '<input type="file" name="fileToUpload" id="fileToUpload">';
 		$form .= '<input type="submit" value="Upload CSV" name="submit">';
@@ -167,5 +151,14 @@ class htmlForm extends page {
 	}
 		
 }
+
+/*
+	Create an HTML form to upload a CSV file
+		-When the CSV file is uploaded:
+			-Save it to AFS in /upload directory within your project
+			-Forward the user to a page using the "header" function (https://www.w3schools.com/PhP/func_http_header.asp)
+		-The new page displays the contents of the CSV file in an HTML table:  
+			-use the <th> tag for the first row of the table and have the field names from the CSV file in this row.
+*/
 
 ?>
