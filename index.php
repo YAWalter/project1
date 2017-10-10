@@ -70,7 +70,6 @@ class homepage extends page {
 	
 	public function post() {
 		// post() should (validate file&) place the file in the folder	
-
 		
 /*
 	COMMENTED BECAUSE I'VE JUST COPIED/PASTED...
@@ -90,13 +89,12 @@ class homepage extends page {
 			   $uploadOk = 0;
 		    }
 		}
-
 		
 	COMMENTED BECAUSE I'VE JUST COPIED/PASTED...
 */
 		
-		// set redirect for header
-		header("Location: index.php?page=CSVdisplay");
+		// set redirect for header		
+		header(pageBuild::redirect('CSVdisplay', $_FILES["fileToUpload"]["name"]));
 		
 		// print error message, because you should be gone by now...
 		$this->html .= htmlTags::heading('WHY ARE YOU HERE?!');
@@ -113,16 +111,17 @@ class CSVdisplay extends page {
 		// if there's a filename param, process the file
 		$file = pageBuild::getFile();
 		$filepath = $upload . $file;
+		
 		if ($file != NULL) {
+			$this->html .= htmlTags::heading('File: ' . $file);
 			$file = fopen($filepath, "r") or die("Unable to open file!");
 			$csv = fread($file, filesize("$filepath"));
-		
-		
 			fclose($file);
 		
 			// format the data output
 			$table = arrayTools::csvChunker($csv);
 		} else {
+			$this->html .= '<i>No File<i>';
 			$table = array();
 		}
 		

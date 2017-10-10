@@ -33,8 +33,11 @@ class pageBuild extends page {
 			$file = $_REQUEST['file'];
 		}
 		
-		echo "file: $file \n";
 		return $file;
+	}
+	
+	public static function redirect($page, $file) {
+		return 'Location: index.php?page=' . $page . '&file=' . $file;
 	}
 	
 	public static function pageEnder() {
