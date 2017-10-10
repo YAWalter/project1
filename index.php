@@ -158,7 +158,7 @@ class pageBuild extends page {
 class htmlForm extends page {
 	public static function formBuild() {
 		$form = pageBuild::heading('Upload CSV File:');
-		$form .= '<form action="index.php?page=homepage" method="post">';
+		$form .= '<form action="index.php?page=homepage" method="post" enctype="multipart/form-data">';
 		$form .= '<input type="file" name="fileToUpload" id="fileToUpload">';
 		$form .= '<input type="submit" value="Upload CSV" name="submit">';
 		$form .= '</form> ';
