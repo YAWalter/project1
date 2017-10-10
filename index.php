@@ -55,10 +55,7 @@ abstract class page {
 	protected $html;
 
 	public function __construct() {
-		$this->html .= '<html><head>';
-		$this->html .= '<link rel="stylesheet" href="styles.css">';
-		$this->html .= pageBuild::makeTitle();
-		$this->html .= '</head><body>';
+		$this->html = pageBuild::PageHeader();
 	}
     
 	public function __destruct() {
@@ -77,33 +74,38 @@ abstract class page {
 
 // index.php?page=homepage
 class homepage extends page {
-
 	public function get() {
-		
 		$this->html .= htmlForm::formBuild();
-		
 	}
 	
 	public function post() {
-		
-		$csv = '1,2,3,4,5,6\n7,8,9,10,11,12\n13,14,15,16,17,18';
-		$formData = arrayTools::csvChunker($csv);
-		$form = htmlTable::tableBuild($formData);
-		$this->html .= $form;
+		// post() should (validate file&) place the file in the folder
+		// call redirect from header
+		header("Location: https://web.njit.edu/~yw674/project1/index.php?page=CSVdisplay");
 		
 		$this->html .= print_r($_FILES, true);
+	}
+}
+
+// // index.php?page=CSVdisplay
+class CSVdisplay extends page {
+	public function get() {
+		// gets filename from index.php?file=$file
+		$csv = '1,2,3,4,5,6\n7,8,9,10,11,12\n13,14,15,16,17,18';
+		$formData = arrayTools::csvChunker($csv);
 	}
 }
 
 // class for page tools
 class pageBuild extends page {
 	
-	public static function getName() {
-		$page = 'homepage';
-		if(isset($_REQUEST['page']))
-			$page = $_REQUEST['page'];
+	public static function pageHeader() {
+		$head = '<html><head>';
+		$head .= '<link rel ="stylesheet" href="styles.css">';
+		$head .= pageBuild::makeTitle();
+		$head .= '</head><body>';
 		
-		return $page;
+		return $head; 
 	}
 	
 	public static function makeTitle() {
@@ -111,19 +113,28 @@ class pageBuild extends page {
 			
 		return '<title>' . ucwords($page) . '</title>';
 	}
+
+	public static function getName() {
+		$page = 'homepage';
+		if(isset($_REQUEST['page']))
+			$page = $_REQUEST['page'];
+		
+		return $page;
+	}
 }
 
 // class for building forms
 class htmlForm extends page {
 	public static function formBuild() {
 		$form = '<h1>Upload CSV File:</h1>';
-		$form .= '<form action="index.php?uploadForm" method="post">';
+		$form .= '<form action="index.php?homepage" method="post">';
 		$form .= '<input type="file" name="fileToUpload" id="fileToUpload">';
 		$form .= '<input type="submit" value="Upload CSV" name="submit">';
 		$form .= '</form> ';
 		
 		return $form;
 	}
+	
 }
 
 ?>
