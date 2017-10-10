@@ -1,2 +1,2 @@
 table,th,td { border: 1px solid black; }
-th,td { width: 20px; }
+th,td { min-width: 50px; padding: 1px 5px; }

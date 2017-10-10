@@ -36,7 +36,6 @@ class main {
 	}
 	
 	public function __destruct() {
-			echo $this->html;
 			echo '<hr>';
 	}
 }
@@ -50,7 +49,7 @@ abstract class page {
 	}
     
 	public function __destruct() {
-		$this->html .= pageBuild:pageEnder();
+		$this->html .= pageBuild::pageEnder();
 		echo $this->html;
 	}
 
@@ -108,31 +107,27 @@ class homepage extends page {
 class CSVdisplay extends page {
 	public function get() {
 		
-		// test data
-		$testcsv = '1,2,3,4,5,6\n7,8,9,10,11,12\n13,14,15,16,17,18';
-
 		$upload = './uploads/';
 		$csv = array();
-/*
-refer to: https://www.w3schools.com/php/php_file_open.asp
-*/
+
 		// if there's a filename param, process the file
 		$file = pageBuild::getFile();
 		$filepath = $upload . $file;
-		if (!is_null($file)) {
+		if ($file != NULL) {
 			$file = fopen($filepath, "r") or die("Unable to open file!");
 			$csv = fread($file, filesize("$filepath"));
 		
-			$this->html .= '<hr><pre>' . print($csv) . '</pre>';
 		
 			fclose($file);
+		
+			// format the data output
+			$table = arrayTools::csvChunker($csv);
+		} else {
+			$table = array();
 		}
 		
-		// format the data output
-		$table = arrayTools::csvChunker($csv);
-		
 		// debug
-		$this->html .= '<hr><pre>' . print_r($table, true) . '</pre>';
+		// $this->html .= '<hr><pre>' . print_r($table, true) . '</pre>';
 		
 		$this->html .= htmlTable::tableBuild($table);
 	}

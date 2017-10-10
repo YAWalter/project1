@@ -31,7 +31,11 @@ class htmlTable extends page {
 		
 		$cells = '';
 		foreach ($data as $header) {
-			$cells .= '<th>' . $header . '</th>';
+			if ($header != '') {
+				$cells .= '<th>' . $header . '</th>';
+			} else {
+				continue;
+			}
 		}
 		
 		return $cells;
@@ -41,11 +45,16 @@ class htmlTable extends page {
 		
 		$cells = '';
 		foreach ($data as $unit) {
-			$cells .= '<td>' . $unit . '</td>';			
+			if ($unit != '') {
+				$cells .= '<td>' . $unit . '</td>';			
+			} else {
+				continue;
+			}
 		}
 		
 		return $cells;
 	}
+	
 }
 
 ?>

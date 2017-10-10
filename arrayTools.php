@@ -6,9 +6,11 @@ class arrayTools extends page {
 	public static function csvChunker($csv) {
 		$chunked = array();
 		
-		$rows = arrayTools::chunker($csv, '\n');
+		$rows = arrayTools::chunker($csv, "\n");
+		// processes each line, removing "s
 		foreach ($rows as $line) {
-			$chunked[] = arrayTools::chunker($line, ',');
+			$raw = arrayTools::chunker($line, ',');
+			$chunked[] = str_replace('"', '', $raw);
 		}
 		
 		return $chunked;

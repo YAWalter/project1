@@ -8,7 +8,7 @@ class pageBuild extends page {
 	
 		// helpful to have these locally
 		$name = pageBuild::getName();
-		$file = pageBuild::getFile();
+		//$file = pageBuild::getFile();
 		
 		$head  = '<html><head>';
 		$head .= '<link rel ="stylesheet" href="styles.css">';
@@ -29,9 +29,11 @@ class pageBuild extends page {
 	
 	public static function getFile() {
 		$file = NULL;
-		if(isset($_REQUEST['file']))
+		if(isset($_REQUEST['file'])) {
 			$file = $_REQUEST['file'];
+		}
 		
+		echo "file: $file \n";
 		return $file;
 	}
 	
