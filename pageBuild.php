@@ -46,6 +46,19 @@ class pageBuild extends page {
 		return $output;
 	}
 	
+	public static function filepath() {
+		$upload = '/uploads/';
+		$name = pageBuild::getFile();
+		$path = $upload . $name;
+		$filedata = array(
+			'upload'=>$upload, 
+			'name'  =>$name, 
+			'path'  =>$path
+		);
+		
+		return $filedata;
+	}
+	
 	public static function redirect($page, $file) {
 		return 'Location: index.php?page=' . $page . '&file=' . $file;
 	}

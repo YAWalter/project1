@@ -35,12 +35,6 @@ class textParse extends page {
 		
 		return rtrim(ltrim($str));
 	}
-	
-	public static function testarray() {
-		$arr1 = array(' ', '  ', ' phew!', '   ', 'some text   ', '    ', '\n');
-		$arr2 = array(' ', '  ', "\t", '', '    ', "\n");
-		
-		return '<pre>' . print_r(textParse::dropEmpty($arr2), true) . '</pre>';
-	}
+
 }
 ?>
