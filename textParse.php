@@ -13,6 +13,24 @@ class textParse extends page {
 		return $clean;
 	}
 	
+	public static function arrayMaker($handle) {
+		$clean = array();
+		do {
+			$raw = fgetcsv($handle);
+			// only valid lines get processed
+			if (!empty($raw)) {
+				// text gets cleaned
+				$val = textParse::dropEmpty($raw);
+				// blank lines get skipped
+				if (array_filter($val) != array()) {
+					$clean[] = $val;
+				}
+			}
+		} while ($raw != NULL);
+		
+		return $clean;
+	}
+	
 	public static function cleaner($str) {
 		
 		return rtrim(ltrim($str));

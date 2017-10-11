@@ -97,20 +97,18 @@ class CSVdisplay extends page {
 		$file = pageBuild::getFile();
 		$filepath = $upload . $file;
 		
+		$this->html .= pageBuild::filename($file);
+		
+		// parse the file 
 		if ($file != NULL) {
-			$this->html .= htmlTags::heading('File: ' . $file);
-			
-			// parse file to CSV
 			$csv = parser::fileToCsv($filepath);
 			// debug
 			$this->html .= '<pre>' . print_r($csv, true) . '</pre>';
-		
 		} else {
-			$this->html .= '<i>No File<i>';
 			$csv = array();
 		}
 		
-		// format the data output
+		// build the output table
 		$this->html .= htmlTable::tableBuild($csv);
 	}
 }
@@ -136,19 +134,7 @@ class parser extends page {
 		
 		// open the given file, read until EOF
 		$file = fopen($path, "r") or die("Unable to open file!");
-		
-		do {
-			$raw = fgetcsv($file);
-			// only valid lines get processed
-			if (!empty($raw)) {
-				// text gets added to dataset
-				$val = textParse::dropEmpty($raw);
-				// blank lines get skipped
-				if (array_filter($val) != array()) {
-					$csv[] = $val;
-				}
-			}
-		} while ($raw != NULL);
+		$csv = textParse::arrayMaker($file);
 		fclose($file);
 		
 		return $csv;

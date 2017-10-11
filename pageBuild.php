@@ -36,6 +36,16 @@ class pageBuild extends page {
 		return $file;
 	}
 	
+	public static function filename($name) {
+		if ($name) {
+			$output = htmlTags::heading('File: ' . $name);
+		} else {
+			$output = htmlTags::heading('<i>No File</i>');
+		}
+		
+		return $output;
+	}
+	
 	public static function redirect($page, $file) {
 		return 'Location: index.php?page=' . $page . '&file=' . $file;
 	}
