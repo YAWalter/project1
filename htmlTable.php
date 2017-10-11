@@ -30,11 +30,9 @@ class htmlTable extends page {
 	public static function headBuild($data) {
 		
 		$cells = '';
-		foreach ($data as $header) {
-			if ($header != '') {
+		if ($data) {
+			foreach ($data as $header) {
 				$cells .= '<th>' . $header . '</th>';
-			} else {
-				continue;
 			}
 		}
 		
@@ -44,11 +42,9 @@ class htmlTable extends page {
 	public static function cellBuild($data) {
 		
 		$cells = '';
-		foreach ($data as $unit) {
-			if ($unit != '') {
-				$cells .= '<td>' . $unit . '</td>';			
-			} else {
-				continue;
+		if ($data) {			
+			foreach ($data as $unit) {
+				$cells .= '<td>' . $unit . '</td>';
 			}
 		}
 		

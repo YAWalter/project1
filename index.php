@@ -71,7 +71,6 @@ class homepage extends page {
 	public function post() {
 		// post() should (validate file&) place the file in the folder	
 		
-
 /*
 	COMMENTED BECAUSE I'VE JUST COPIED/PASTED...
 
@@ -88,13 +87,13 @@ class homepage extends page {
 	}
 }
 
+class test extends page { public function get() { $this->html .= textParse::testarray(); } }
+
 // index.php?page=CSVdisplay
 class CSVdisplay extends page {
 	public function get() {
 		
 		$upload = './uploads/';
-
-		// if there's a filename param, process the file
 		$file = pageBuild::getFile();
 		$filepath = $upload . $file;
 		
@@ -103,21 +102,16 @@ class CSVdisplay extends page {
 			
 			// parse file to CSV
 			$csv = parser::fileToCsv($filepath);
-			
+			// debug
 			$this->html .= '<pre>' . print_r($csv, true) . '</pre>';
-			// $csv = fread($file, filesize("$filepath"));
 		
-			// format the data output
-			// $table = arrayTools::csvChunker($csv);
 		} else {
 			$this->html .= '<i>No File<i>';
-			$table = array();
+			$csv = array();
 		}
 		
-		// debug
-		// $this->html .= '<hr><pre>' . print_r($table, true) . '</pre>';
-		
-		$this->html .= htmlTable::tableBuild($table);
+		// format the data output
+		$this->html .= htmlTable::tableBuild($csv);
 	}
 }
 
@@ -140,11 +134,21 @@ class parser extends page {
 	public static function fileToCsv($path) {
 		$csv = array();
 		
+		// open the given file, read until EOF
 		$file = fopen($path, "r") or die("Unable to open file!");
+		
 		do {
-			$line = fgetcsv($file);
-			$csv[] = $line;
-		} while ($line != NULL);
+			$raw = fgetcsv($file);
+			// only valid lines get processed
+			if (!empty($raw)) {
+				// text gets added to dataset
+				$val = textParse::dropEmpty($raw);
+				// blank lines get skipped
+				if (array_filter($val) != array()) {
+					$csv[] = $val;
+				}
+			}
+		} while ($raw != NULL);
 		fclose($file);
 		
 		return $csv;
