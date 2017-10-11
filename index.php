@@ -71,25 +71,12 @@ class homepage extends page {
 	public function post() {
 		// post() should (validate file&) place the file in the folder	
 		
+
 /*
 	COMMENTED BECAUSE I'VE JUST COPIED/PASTED...
 
-		$target_dir = "uploads/";
-		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-		$uploadOk = 1;
-		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-		// Check if image file is a actual image or fake image
-		if(isset($_POST["submit"])) {
-		    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-		    if($check !== false) {
-			   echo "File is an image - " . $check["mime"] . ".";
-			   $uploadOk = 1;
-		    } else {
-			   echo "File is not an image.";
-			   $uploadOk = 0;
-		    }
-		}
-		
+	
+	
 	COMMENTED BECAUSE I'VE JUST COPIED/PASTED...
 */
 		
@@ -106,7 +93,6 @@ class CSVdisplay extends page {
 	public function get() {
 		
 		$upload = './uploads/';
-		$csv = array();
 
 		// if there's a filename param, process the file
 		$file = pageBuild::getFile();
@@ -114,12 +100,15 @@ class CSVdisplay extends page {
 		
 		if ($file != NULL) {
 			$this->html .= htmlTags::heading('File: ' . $file);
-			$file = fopen($filepath, "r") or die("Unable to open file!");
-			$csv = fread($file, filesize("$filepath"));
-			fclose($file);
+			
+			// parse file to CSV
+			$csv = parser::fileToCsv($filepath);
+			
+			$this->html .= '<pre>' . print_r($csv, true) . '</pre>';
+			// $csv = fread($file, filesize("$filepath"));
 		
 			// format the data output
-			$table = arrayTools::csvChunker($csv);
+			// $table = arrayTools::csvChunker($csv);
 		} else {
 			$this->html .= '<i>No File<i>';
 			$table = array();
@@ -137,6 +126,7 @@ class htmlForm extends page {
 	public static function formBuild() {
 		$form = htmlTags::heading('Upload CSV File:');
 		$form .= '<form action="index.php?page=homepage" method="post" enctype="multipart/form-data">';
+		$form .= '<input type="hidden" name="MAX_FILE_SIZE" value="5120">';
 		$form .= '<input type="file" name="fileToUpload" id="fileToUpload">';
 		$form .= '<input type="submit" value="Upload CSV" name="submit">';
 		$form .= '</form> ';
@@ -144,6 +134,21 @@ class htmlForm extends page {
 		return $form;
 	}
 		
+}
+
+class parser extends page {
+	public static function fileToCsv($path) {
+		$csv = array();
+		
+		$file = fopen($path, "r") or die("Unable to open file!");
+		do {
+			$line = fgetcsv($file);
+			$csv[] = $line;
+		} while ($line != NULL);
+		fclose($file);
+		
+		return $csv;
+	}
 }
 
 /*
