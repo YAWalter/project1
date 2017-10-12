@@ -15,42 +15,24 @@ class htmlTable extends page {
 	}
 	
 	// builds a single row of the table from array (top row = <th>)
-	public static function rowBuild($index, $cells) {
+	private static function rowBuild($index, $cells) {
 		
-		$row = '';
-		if ($index == 0) {
-			$row = htmlTable::headBuild($cells);
-		} else {
-			$row = htmlTable::cellBuild($cells);
-		}
-		
-		return '<tr>' . $row . '</tr>';
+		return '<tr>' . htmlTable::cellBuild($index, $cells) . '</tr>';
 	}
 
-	public static function headBuild($data) {
+	private static function cellBuild($index, $data) {
 		
 		$cells = '';
-		if ($data) {
-			foreach ($data as $header) {
-				$cells .= '<th>' . $header . '</th>';
-			}
-		}
-		
-		return $cells;
-	}
-	
-	public static function cellBuild($data) {
-		
-		$cells = '';
-		if ($data) {			
-			foreach ($data as $unit) {
+		foreach ($data as $unit) {
+			if ($index == 0) {
+				$cells .= '<th>' . $unit . '</th>';
+			} else {
 				$cells .= '<td>' . $unit . '</td>';
-			}
+			}				
 		}
 		
 		return $cells;
 	}
-	
 }
 
 ?>

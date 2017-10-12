@@ -69,14 +69,13 @@ class homepage extends page {
 	}
 	
 	public function post() {
-		// write the file
+		// some environment variables
 		$name = $_FILES['fileToUpload']['name'];
 		$tmp_name = $_FILES['fileToUpload']['tmp_name'];
 		$filedata = pageBuild::filepath();
 		$resource = $filedata['upload'] . $name;
 		
 		if ($name) {
-			
 			//$this->html .= 'uploading file to: ' . $resource;
 			//$this->html .= htmlTags::lineBreak();
 			if (move_uploaded_file($tmp_name, $resource)) {
@@ -86,7 +85,7 @@ class homepage extends page {
 			}
 		}
 			
-		// write the file and set header redirect
+		// set the header redirect
 		header(pageBuild::redirect('CSVdisplay', $name));
 		
 		// print error message, because you should be gone by now...
@@ -97,24 +96,21 @@ class homepage extends page {
 // index.php?page=CSVdisplay
 class CSVdisplay extends page {
 	public function get() {
-		
 		$file = pageBuild::filepath();
+		
+		// if there's a file, parse it
+		$csv = ($file['name'] != NULL) ? 
+			parser::fileToCsv($file['path']) :
+			array();
+		// debug
+		// $this->html .= htmlTags::pre(print_r($csv, true));
+		
 		$this->html .= pageBuild::filename($file['name']);
-		
-		// parse the file 
-		if ($file['name'] != NULL) {
-			$csv = parser::fileToCsv($file['path']);
-			// debug
-			// $this->html .= '<pre>' . print_r($csv, true) . '</pre>';
-		} else {
-			$csv = array();
-		}
-		
 		$this->html .= htmlTable::tableBuild($csv);
 	}
 }
 
-// class for building forms
+// class for building the form
 class htmlForm extends page {
 	public static function formBuild() {
 		$form  = htmlTags::heading('Upload CSV File:');		
@@ -127,11 +123,11 @@ class htmlForm extends page {
 	}		
 }
 
+// read the given file through the parser until EOF
 class parser extends page {
 	public static function fileToCsv($path) {
 		$csv = array();
 		
-		// open the given file, read until EOF
 		$file = fopen($path, "r") or die("Unable to open file!");
 		$csv = textParse::arrayMaker($file);
 		fclose($file);
@@ -141,10 +137,10 @@ class parser extends page {
 }
 
 /*
-	Create an HTML form to upload a CSV file
+	Create an HTML form to upload a CSV file:
 		-When the CSV file is uploaded:
 			-Save it to AFS in /upload directory within your project
-			-Forward the user to a page using the "header" function (https://www.w3schools.com/PhP/func_http_header.asp)
+			-Forward the user to a page using the "header" function
 		-The new page displays the contents of the CSV file in an HTML table:  
 			-use the <th> tag for the first row of the table and have the field names from the CSV file in this row.
 */

@@ -5,10 +5,7 @@ class pageBuild extends page {
 	
 	// adds "top matter": html, head, CSS, title, body and a page heading
 	public static function pageHeader() {
-	
-		// helpful to have these locally
 		$name = pageBuild::getName();
-		//$file = pageBuild::getFile();
 		
 		$head  = '<html><head>';
 		$head .= '<link rel ="stylesheet" href="styles.css">';
