@@ -47,7 +47,7 @@ class pageBuild extends page {
 	}
 	
 	public static function filepath() {
-		$upload = '/uploads/';
+		$upload = 'uploads/';
 		$name = pageBuild::getFile();
 		$path = $upload . $name;
 		$filedata = array(

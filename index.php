@@ -88,7 +88,7 @@ class homepage extends page {
 		}
 			
 		// write the file and set header redirect
-		//header(pageBuild::redirect('CSVdisplay', $_FILES["fileToUpload"]["name"]));
+		header(pageBuild::redirect('CSVdisplay', $_FILES["fileToUpload"]["name"]));
 		
 		// print error message, because you should be gone by now...
 		$this->html .= htmlTags::heading('WHY ARE YOU HERE?!');
