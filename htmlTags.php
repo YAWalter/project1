@@ -10,5 +10,8 @@ class htmlTags {
 		return '<h1>' . $str . '</h1>';
 	}
 
+	public static function lineBreak() {
+			return '<br>';
+		}
 }
 ?>

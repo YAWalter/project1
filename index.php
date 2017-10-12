@@ -79,7 +79,8 @@ class homepage extends page {
 		$this->html .= $name . '<br>';
 		
 		if ($name) {
-			$this->html .= 'uploading file to: ' . $resource . '<br>';
+			$this->html .= 'uploading file to: ' . $resource;
+			$this->html .= htmlTags::lineBreak();
 			if (move_uploaded_file($tmp_name, $filedata['upload'] . $name)) {
 				$this->html .= 'SUCCESS';
 			} else {
@@ -88,7 +89,7 @@ class homepage extends page {
 		}
 			
 		// write the file and set header redirect
-		header(pageBuild::redirect('CSVdisplay', $_FILES["fileToUpload"]["name"]));
+		header('Refresh: 10; URL=' . pageBuild::redirect('CSVdisplay', $_FILES["fileToUpload"]["name"]));
 		
 		// print error message, because you should be gone by now...
 		$this->html .= htmlTags::heading('WHY ARE YOU HERE?!');
