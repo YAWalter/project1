@@ -1,9 +1,9 @@
 <?php
 
 // # DEBUGGING
-echo '<h1><br> *** TURN DEBUG OFF!! *** <br></h1><br>';
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
+// echo '<h1><br> *** TURN DEBUG OFF!! *** <br></h1><br>';
+// ini_set('display_errors', 'On');
+// error_reporting(E_ALL);
 
 // # AUTOLOADER
 // # add classes by writing [$class].php instead
@@ -69,19 +69,17 @@ class homepage extends page {
 	}
 	
 	public function post() {
-		// (validate &) write the file
+		// write the file
 		$name = $_FILES['fileToUpload']['name'];
 		$tmp_name = $_FILES['fileToUpload']['tmp_name'];
 		$filedata = pageBuild::filepath();
 		$resource = $filedata['upload'] . $name;
 		
-		$this->html .= $tmp_name . '<br>';
-		$this->html .= $name . '<br>';
-		
 		if ($name) {
-			$this->html .= 'uploading file to: ' . $resource;
-			$this->html .= htmlTags::lineBreak();
-			if (move_uploaded_file($tmp_name, $filedata['upload'] . $name)) {
+			
+			//$this->html .= 'uploading file to: ' . $resource;
+			//$this->html .= htmlTags::lineBreak();
+			if (move_uploaded_file($tmp_name, $resource)) {
 				$this->html .= 'SUCCESS';
 			} else {
 				$this->html .= 'FAILURE ' . $_FILES['fileToUpload']['error'];
@@ -89,7 +87,7 @@ class homepage extends page {
 		}
 			
 		// write the file and set header redirect
-		header('Refresh: 10; URL=' . pageBuild::redirect('CSVdisplay', $_FILES["fileToUpload"]["name"]));
+		header(pageBuild::redirect('CSVdisplay', $name));
 		
 		// print error message, because you should be gone by now...
 		$this->html .= htmlTags::heading('WHY ARE YOU HERE?!');
@@ -112,7 +110,6 @@ class CSVdisplay extends page {
 			$csv = array();
 		}
 		
-		// build the output table
 		$this->html .= htmlTable::tableBuild($csv);
 	}
 }
@@ -120,20 +117,14 @@ class CSVdisplay extends page {
 // class for building forms
 class htmlForm extends page {
 	public static function formBuild() {
-		$form = htmlTags::heading('Upload CSV File:');
-		
+		$form  = htmlTags::heading('Upload CSV File:');		
 		$form .= '<form action="index.php?page=homepage" method="post" enctype="multipart/form-data">';
 		$form .= '<input type="file" name="fileToUpload" id="fileToUpload">';
 		$form .= '<input type="submit" value="Upload CSV" name="submit">';
 		$form .= '</form> ';
 		
 		return $form;
-	}
-	
-	public static function formAction() {
-	
-	}
-		
+	}		
 }
 
 class parser extends page {
