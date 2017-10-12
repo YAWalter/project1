@@ -80,14 +80,14 @@ class homepage extends page {
 			//$this->html .= htmlTags::lineBreak();
 			if (move_uploaded_file($tmp_name, $resource)) {
 				$this->html .= 'SUCCESS';
+				// set the header redirect
+				header(pageBuild::redirect('CSVdisplay', $name));
+		
 			} else {
 				$this->html .= 'FAILURE ' . $_FILES['fileToUpload']['error'];
 			}
 		}
 			
-		// set the header redirect
-		header(pageBuild::redirect('CSVdisplay', $name));
-		
 		// print error message, because you should be gone by now...
 		$this->html .= htmlTags::heading('WHY ARE YOU HERE?!');
 	}
