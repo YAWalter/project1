@@ -19,11 +19,11 @@ class htmlTags {
 	}
 	
 	public static function listMaker($arr, $ordered) {
-		$list = htmlTags::listMaker($ordered, 0);
+		$list = htmlTags::listTag($ordered, 0);
 		foreach ($arr as $item) {
 			$list .= '<li>' . $item . '</li>';
 		}
-		$list .= htmlTags::listMaker($ordered, 1);
+		$list .= htmlTags::listTag($ordered, 1);
 		
 		return $list;
 	}
